@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
-    mainContainer: {
+    root: {
         width: "50%",
         height: "100%",
         display: "flex",
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "0px 24px 24px 24px",
+        padding: theme.spacing(0, 3, 0, 1.5),
     },
     paperContainer: {
         height: "100%",
@@ -55,7 +55,7 @@ function RightWindow() {
 
     return (
         <React.Fragment>
-            <Box className={classes.mainContainer}>
+            <Box className={classes.root}>
                 <Box className={classes.keyBarContainer}>
                     <div style={{ display: "flex", width: "80%" }}>
                         <input

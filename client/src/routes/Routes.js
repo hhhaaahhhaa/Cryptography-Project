@@ -1,17 +1,17 @@
 import React from "react";
-import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
+import SignInPage from "../pages/SignInPage";
 import MainPage from "../pages/MainPage";
+import AuthRoute from "./AuthRoute";
+import ProtectRoute from "./ProtectRoute";
 
 function Routes() {
     return (
-        <Route exact path="/">
-            <MainPage />
-        </Route>
-        /*
         <Switch>
+            <AuthRoute exact path="/" component={SignInPage} />
+            <AuthRoute exact path="/login" component={SignInPage} />
+            <ProtectRoute exact path="/dashboard" component={MainPage} />
         </Switch>
-        */
     );
 }
 
