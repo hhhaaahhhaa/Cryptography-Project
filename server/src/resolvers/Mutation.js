@@ -2,7 +2,7 @@ const { f, rand } = require("../functions/F");
 const G = require("../functions/G");
 const { AES_encrypt } = require("../functions/aes");
 const { User } = require("../model/User");
-
+const { BitSet } = require("bitset");
 const seedrandom = require("seedrandom");
 
 const Mutation = {
@@ -13,14 +13,14 @@ const Mutation = {
                 let f_kf = f("11579208923731619542357098500868", ele);
                 let rng = seedrandom(0xada);
                 let r = rand(rng);
-                let iw = 1;
-                let idx_MGF1 = new Uint32Array(1);
-                idx_MGF1[0] = iw ^ G(r);
+                let iw = new BitSet("100");
+                let idx_MGF1 = iw.xor(G(r));
+                idx_MGF1 = idx_MGF1.toString(2);
                 let enc_r = AES_encrypt(
                     r.toString(),
                     "92748097864525839647296489438923"
                 );
-                user.metadatas.push({ f_kf, idx_MGF1: idx_MGF1[0], enc_r });
+                user.metadatas.push({ f_kf, idx_MGF1, enc_r });
             });
             await user.save();
             return true;

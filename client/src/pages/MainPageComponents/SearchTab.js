@@ -72,7 +72,7 @@ function SearchTab() {
         // decrypt r
         let r = [];
         if (data1) {
-            data1.search_s1.forEach((element) => {
+            data1.search_s1.enc_rs.forEach((element) => {
                 r.push(parseInt(AES_decrypt(element, k_eps)));
             });
             if (r) {
@@ -81,7 +81,7 @@ function SearchTab() {
                 await search_s2({
                     variables: {
                         keywordRands: r,
-                        enc_rs: data1.search_s1,
+                        index: data1.search_s1.index,
                         uid: "0",
                     },
                 });

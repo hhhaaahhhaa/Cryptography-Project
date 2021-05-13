@@ -17,7 +17,7 @@ const MetaDataSchema = new mongoose.Schema({
         required: true,
     },
     idx_MGF1: {
-        type: Number,
+        type: String,
         required: true,
     },
     enc_r: {
