@@ -1,0 +1,23 @@
+{
+    "name": "server",
+    "version": "0.0.1",
+    "description": "Crptography project for searchable encryption.",
+    "devDependencies": {
+        "dotenv-defaults": "^2.0.1",
+        "nodemon": "^1.19.2"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "apollo-server-express": "^2.24.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "graphql": "^15.5.0",
+        "mongodb": "^3.6.3",
+        "mongoose": "^5.10.15",
+        "node-forge": "^0.10.0",
+        "seedrandom": "^3.0.5"
+    },
+    "scripts": {
+        "start": "nodemon --exec node src/index.js"
+    }
+}

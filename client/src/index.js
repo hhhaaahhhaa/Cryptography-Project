@@ -5,12 +5,23 @@ import App from "./App";
 import { AuthProvider } from "./context/authContext";
 import reportWebVitals from "./reportWebVitals";
 
+const {
+    ApolloClient,
+    InMemoryCache,
+    ApolloProvider,
+} = require("@apollo/client");
+
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: "http://localhost:4000/graphql",
+});
+
 ReactDOM.render(
-    <React.StrictMode>
+    <ApolloProvider client={client}>
         <AuthProvider>
             <App />
         </AuthProvider>
-    </React.StrictMode>,
+    </ApolloProvider>,
     document.getElementById("root")
 );
 

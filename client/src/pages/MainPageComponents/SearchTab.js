@@ -7,6 +7,11 @@ import TextWindow from "./SearchTabComponents/TextWindow";
 import bg from "../../icons/background2.jpg";
 
 import { authContext } from "../../context/authContext";
+import { SEARCH_S1_QUERY, SEARCH_S2_QUERY } from "../../graphql/search";
+import { f } from "../../functions/F";
+import { G } from "../../functions/G";
+import { AES_encrypt, AES_decrypt } from "../../functions/aes";
+const { useLazyQuery } = require("@apollo/client");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,15 +35,70 @@ function SearchTab() {
     const { user } = useContext(authContext);
     const [ciphertext, setCiphertext] = useState("c");
     const [plaintext, setPlaintext] = useState("p");
+    const [search_s1, { loading: load1, data: data1 }] =
+        useLazyQuery(SEARCH_S1_QUERY);
+    const [search_s2, { loading: load2, data: data2 }] =
+        useLazyQuery(SEARCH_S2_QUERY);
 
-    const search = (keywords) => {
+    let k_f = "11579208923731619542357098500868";
+    let k_M = "19273847567432794847016283567825";
+    let k_eps = "92748097864525839647296489438923";
+
+    useEffect(() => {
+        decrypt_r();
+        return () => {};
+    }, [data1]);
+
+    useEffect(() => {
+        decrypt_data();
+        return () => {};
+    }, [data2]);
+
+    const search = async (keywords) => {
         // encrypt keywords
+        keywords = keywords.map((ele) => {
+            return f(k_f, ele);
+        });
         // fetch encrypted r
+        await search_s1({
+            variables: {
+                keywords,
+                uid: "0",
+            },
+        });
+    };
+
+    const decrypt_r = async () => {
         // decrypt r
-        // send r
-        // fetch encrypted data
+        let r = [];
+        if (data1) {
+            data1.search_s1.forEach((element) => {
+                r.push(parseInt(AES_decrypt(element, k_eps)));
+            });
+            if (r) {
+                // send r
+                // fetch encrypted data
+                await search_s2({
+                    variables: {
+                        keywordRands: r,
+                        enc_rs: data1.search_s1,
+                        uid: "0",
+                    },
+                });
+            }
+        }
+    };
+
+    const decrypt_data = async () => {
         // decrypt data
-        console.log(keywords);
+        let plaintexts = [];
+        if (data2) {
+            setCiphertext(data2.search_s2);
+            data2.search_s2.forEach((ele) => {
+                plaintexts.push(AES_decrypt(ele, k_M));
+            });
+            setPlaintext(plaintexts);
+        }
     };
 
     return (
