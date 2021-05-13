@@ -8,12 +8,14 @@ cd Cryptography-Project
 ### Client
 ~~~
 cd client
+yarn install
 yarn start
 ~~~
 ### Server
 ~~~
 cd server
 touch .env  # add MONGO_URL in .env
+yarn install
 yarn start
 ~~~
 ### Graphql playground
