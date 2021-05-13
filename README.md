@@ -18,14 +18,14 @@ yarn start
 ~~~
 ### Graphql playground
 browser open http://localhost:4000/graphql
-#### add key
+#### add user
 ex:
 ~~~
 mutation {
   createUser(uid: "0") 
 }
 ~~~
-#### add user
+#### add key
 ex:
 ~~~
 mutation {
