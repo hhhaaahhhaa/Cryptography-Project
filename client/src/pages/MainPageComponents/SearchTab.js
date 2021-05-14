@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+import IconButton from "@material-ui/core/IconButton";
+import NavigateBeforeTwoToneIcon from "@material-ui/icons/NavigateBeforeTwoTone";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+
 import SearchBar from "./SearchTabComponents/SearchBar";
 import TextWindow from "./SearchTabComponents/TextWindow";
 
@@ -11,6 +15,7 @@ import { SEARCH_S1_QUERY, SEARCH_S2_QUERY } from "../../graphql/search";
 import { f } from "../../functions/F";
 import { G } from "../../functions/G";
 import { AES_encrypt, AES_decrypt } from "../../functions/aes";
+import { cipher } from "node-forge";
 const { useLazyQuery } = require("@apollo/client");
 
 const useStyles = makeStyles((theme) => ({
@@ -33,12 +38,15 @@ const useStyles = makeStyles((theme) => ({
 function SearchTab() {
     const classes = useStyles();
     const { user } = useContext(authContext);
-    const [ciphertext, setCiphertext] = useState("c");
-    const [plaintext, setPlaintext] = useState("p");
-    const [search_s1, { loading: load1, data: data1 }] =
-        useLazyQuery(SEARCH_S1_QUERY);
-    const [search_s2, { loading: load2, data: data2 }] =
-        useLazyQuery(SEARCH_S2_QUERY);
+    const [ciphertext, setCiphertext] = useState("");
+    const [plaintext, setPlaintext] = useState("");
+    const [idxShow, setIdxShow] = useState(0);
+    const [search_s1, { loading: load1, data: data1 }] = useLazyQuery(
+        SEARCH_S1_QUERY
+    );
+    const [search_s2, { loading: load2, data: data2 }] = useLazyQuery(
+        SEARCH_S2_QUERY
+    );
 
     let k_f = "11579208923731619542357098500868";
     let k_M = "19273847567432794847016283567825";
@@ -55,6 +63,7 @@ function SearchTab() {
     }, [data2]);
 
     const search = async (keywords) => {
+        setIdxShow(0);
         // encrypt keywords
         keywords = keywords.map((ele) => {
             return f(k_f, ele);
@@ -101,24 +110,64 @@ function SearchTab() {
         }
     };
 
+    // change showing idx
+    const showNext = () => {
+        if (idxShow + 1 === ciphertext.length) {
+            setIdxShow(0);
+        } else {
+            setIdxShow(idxShow + 1);
+        }
+    };
+
+    const showPrev = () => {
+        if (idxShow === 0) {
+            setIdxShow(ciphertext.length - 1);
+        } else {
+            setIdxShow(idxShow - 1);
+        }
+    };
+
     return (
         <div className={classes.root}>
             <SearchBar searchFunc={search}></SearchBar>
             <div style={{ display: "flex", flexGrow: 1 }}>
                 <TextWindow
-                    ciphertext={ciphertext}
-                    plaintext={plaintext}
+                    ciphertext={
+                        ciphertext.length > 0 ? ciphertext[idxShow] : ""
+                    }
+                    plaintext={plaintext.length > 0 ? plaintext[idxShow] : ""}
                 ></TextWindow>
             </div>
             <div className={classes.footBar}>
+                <IconButton
+                    size="small"
+                    onClick={() => () => showPrev()}
+                    disabled={ciphertext.length === 0}
+                >
+                    <NavigateBeforeTwoToneIcon
+                        style={{ fill: "white" }}
+                        color="inherit"
+                    />
+                </IconButton>
                 <p
                     style={{
                         color: "white",
                         fontSize: "16px",
                     }}
                 >
-                    1/1
+                    {ciphertext.length === 0 ? 0 : idxShow + 1}/
+                    {ciphertext.length}
                 </p>
+                <IconButton
+                    size="small"
+                    onClick={() => showNext()}
+                    disabled={ciphertext.length === 0}
+                >
+                    <NavigateNextIcon
+                        style={{ fill: "white" }}
+                        color="inherit"
+                    />
+                </IconButton>
             </div>
         </div>
     );

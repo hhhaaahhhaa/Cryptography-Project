@@ -141,13 +141,7 @@ function SearchBar(props) {
                     </Alert>
                 </Popover>
             </div>
-            <IconButton
-                classes={{
-                    root: classes.nopad,
-                }}
-                size="large"
-                onClick={() => props.searchFunc(chipData)}
-            >
+            <IconButton size="large" onClick={() => props.searchFunc(chipData)}>
                 <SearchIcon />
             </IconButton>
         </div>
