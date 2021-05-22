@@ -5,6 +5,32 @@ const { User } = require("../model/User");
 const { BitSet } = require("bitset");
 
 const Query = {
+    search_keyword: async (parent, { keywords, uid }) => {
+        try {
+            // find matched metadatas
+            const user = await User.findOne({ uid }, { metadatas: 1 });
+            let i_xor_g = [];
+            let e_g_r = [];
+            let index = [];
+            keywords.forEach((ele) => {
+                let result = user.metadatas.find(({ f_kf }, idx) => {
+                    if (f_kf === ele) {
+                        index.push(idx);
+                    }
+                    return f_kf === ele;
+                });
+                if (result) {
+                    i_xor_g.push(result.idx_MGF1);
+                    e_g_r.push(result.enc_r);
+                }
+            });
+            return { i_xor_g, e_g_r };
+            // return enc_rs;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    },
     search_s1: async (parent, { keywords, uid }) => {
         try {
             // find matched metadatas
@@ -58,5 +84,7 @@ const Query = {
             return err;
         }
     },
+
+
 };
 module.exports.Query = Query;

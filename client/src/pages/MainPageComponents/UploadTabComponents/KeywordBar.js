@@ -49,9 +49,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function KeywordBar() {
+function KeywordBar(props) {
     const classes = useStyles();
-    const [chipData, setChipData] = useState([]);
     const [keyword, setKeyword] = useState("");
     const [anchorEle, setAnchorEle] = useState(null);
 
@@ -75,11 +74,11 @@ function KeywordBar() {
     const newKeyword = (e) => {
         if (e.key === "Enter" && keyword !== "") {
             try {
-                if (chipData.includes(keyword)) {
+                if (props.chipData.includes(keyword)) {
                     setAnchorEle(document.body);
                     return;
                 }
-                setChipData([...chipData, keyword]);
+                props.setChipData([...props.chipData, keyword]);
                 e.target.value = "";
                 setKeyword("");
             } catch (err) {
@@ -90,8 +89,8 @@ function KeywordBar() {
 
     const deleteKeyword = (deleteIndex) => {
         try {
-            let chips = chipData.filter((_, index) => index !== deleteIndex);
-            setChipData(chips);
+            let chips = props.chipData.filter((_, index) => index !== deleteIndex);
+            props.setChipData(chips);
         } catch (err) {
             console.log(err);
         }
@@ -101,7 +100,7 @@ function KeywordBar() {
         <div className={classes.root}>
             <div className={classes.addContainer}>
                 <div className={classes.keywordContainer}>
-                    {chipData.map((data, index) => {
+                    {props.chipData.map((data, index) => {
                         return (
                             <li key={index}>
                                 <Chip

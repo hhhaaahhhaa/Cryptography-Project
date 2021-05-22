@@ -11,11 +11,12 @@ import TextWindow from "./SearchTabComponents/TextWindow";
 import bg from "../../icons/background2.jpg";
 
 import { authContext } from "../../context/authContext";
-import { SEARCH_S1_QUERY, SEARCH_S2_QUERY } from "../../graphql/search";
+import { SEARCH_S1_QUERY, SEARCH_S2_QUERY } from "../../graphql/database";
 import { f } from "../../functions/F";
 import { G } from "../../functions/G";
 import { AES_encrypt, AES_decrypt } from "../../functions/aes";
 import { cipher } from "node-forge";
+import { k_f, k_M, k_eps } from "../../config";
 const { useLazyQuery } = require("@apollo/client");
 
 const useStyles = makeStyles((theme) => ({
@@ -48,10 +49,6 @@ function SearchTab() {
         SEARCH_S2_QUERY
     );
 
-    let k_f = "11579208923731619542357098500868";
-    let k_M = "19273847567432794847016283567825";
-    let k_eps = "92748097864525839647296489438923";
-
     useEffect(() => {
         decrypt_r();
         return () => {};
@@ -68,6 +65,7 @@ function SearchTab() {
         keywords = keywords.map((ele) => {
             return f(k_f, ele);
         });
+
         // fetch encrypted r
         await search_s1({
             variables: {

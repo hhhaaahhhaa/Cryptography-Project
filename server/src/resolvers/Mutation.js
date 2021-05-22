@@ -1,5 +1,6 @@
 const { f, rand } = require("../functions/F");
 const G = require("../functions/G");
+const { k_f, k_M, k_eps } = require("../config");
 const { AES_encrypt } = require("../functions/aes");
 const { User } = require("../model/User");
 const { BitSet } = require("bitset");
@@ -10,7 +11,7 @@ const Mutation = {
         try {
             const user = await User.findOne({ uid }, { metadatas: 1 });
             keys.forEach((ele) => {
-                let f_kf = f("11579208923731619542357098500868", ele);
+                let f_kf = f(k_f, ele);
                 let rng = seedrandom(0xada);
                 let r = rand(rng);
                 let iw = new BitSet("100");
@@ -18,7 +19,7 @@ const Mutation = {
                 idx_MGF1 = idx_MGF1.toString(2);
                 let enc_r = AES_encrypt(
                     r.toString(),
-                    "92748097864525839647296489438923"
+                    k_eps
                 );
                 user.metadatas.push({ f_kf, idx_MGF1, enc_r });
             });
@@ -49,25 +50,23 @@ const Mutation = {
             return err;
         }
     },
-    createData: async (parent, { data, uid }) => {
+    createData: async (parent, { data, uid }) => { // the data was encrypted by front-end
         try {
             const user = await User.findOne(
                 { uid },
                 { datas: 1, data_count: 1 }
             );
             user.datas.push({
-                enc_content: AES_encrypt(
-                    data,
-                    "19273847567432794847016283567825"
-                ),
+                enc_content: data,
             });
             user.data_count += 1;
             await user.save();
-            return true;
+            return user.data_count;
         } catch (err) {
             console.log(err);
-            return false;
+            return -1;
         }
     },
+
 };
 module.exports.Mutation = Mutation;
