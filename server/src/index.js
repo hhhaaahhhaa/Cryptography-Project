@@ -15,42 +15,42 @@ const PORT = process.env.PORT || 4000;
 // });
 
 async function startApolloServer() {
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers: { Query, Mutation },
-    });
-    await server.start({});
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers: { Query, Mutation },
+  });
+  await server.start({});
 
-    const app = express();
-    // app.use(cors());
-    server.applyMiddleware({ app, path: "/graphql" });
+  const app = express();
+  // app.use(cors());
+  server.applyMiddleware({ app, path: "/graphql" });
 
-    await new Promise((resolve) => app.listen({ port: PORT }, resolve));
-    console.log(
-        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    );
-    return { server, app };
+  await new Promise((resolve) => app.listen({ port: PORT }, resolve));
+  console.log(
+    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+  );
+  return { server, app };
 }
 
 /// Connect to MongoDB
 if (!process.env.MONGO_URL) {
-    console.error("Missing MONGO_URL!!!");
-    process.exit(1);
+  console.error("Missing MONGO_URL!!!");
+  process.exit(1);
 }
 
 mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 const db = mongoose.connection;
 
 db.on("error", (error) => {
-    console.error(error);
+  console.error(error);
 });
 
 db.once("open", () => {
-    console.log("MongoDB connected!");
-    const { server, app } = startApolloServer();
+  console.log("MongoDB connected!");
+  const { server, app } = startApolloServer();
 });

@@ -6,23 +6,23 @@ import { AuthProvider } from "./context/authContext";
 import reportWebVitals from "./reportWebVitals";
 
 const {
-    ApolloClient,
-    InMemoryCache,
-    ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
 } = require("@apollo/client");
 
 const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    uri: "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
+  uri: "http://localhost:4000/graphql",
 });
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
-        <AuthProvider>
-            <App />
-        </AuthProvider>
-    </ApolloProvider>,
-    document.getElementById("root")
+  <ApolloProvider client={client}>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </ApolloProvider>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
