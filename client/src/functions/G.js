@@ -14,9 +14,4 @@ function G(r) {
   return rv[0];
 }
 
-// var r = 3351;
-// var iw = 0;
-// console.log(G(r));
-// console.log(iw);
-// console.log(iw ^ G(r));
 module.exports.G = G;

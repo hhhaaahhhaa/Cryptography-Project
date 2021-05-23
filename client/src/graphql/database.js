@@ -19,7 +19,7 @@ export const SEARCH_S1_QUERY = gql`
 `;
 
 export const SEARCH_S2_QUERY = gql`
-  query search_s2($keywordRands: [Int]!, $index: [Int]!, $uid: String!) {
+  query search_s2($keywordRands: [Float]!, $index: [Int]!, $uid: String!) {
     search_s2(keywordRands: $keywordRands, index: $index, uid: $uid)
   }
 `;

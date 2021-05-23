@@ -5,7 +5,7 @@ module.exports.typeDefs = gql`
   type Query {
     search_keyword(keywords: [Int]!, uid: String!): keyword_results!
     search_s1(keywords: [Int]!, uid: String!): s1!
-    search_s2(keywordRands: [Int]!, index: [Int]!, uid: String!): [String]!
+    search_s2(keywordRands: [Float]!, index: [Int]!, uid: String!): [String]!
   }
 
   type Mutation {

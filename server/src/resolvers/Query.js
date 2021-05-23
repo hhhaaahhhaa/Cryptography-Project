@@ -1,5 +1,5 @@
 const { f, rand } = require("../functions/F");
-const G = require("../functions/G");
+const { G } = require("../functions/G");
 const { AES_encrypt, AES_decrypt } = require("../functions/aes");
 const { User } = require("../model/User");
 const { BitSet } = require("bitset");
@@ -66,19 +66,29 @@ const Query = {
         { metadatas: 1, datas: 1, data_count: 1 }
       );
 
+      console.log(keywordRands);
+      console.log(index);
+
       let idxs = new BitSet(0);
       for (let i = 0; i < keywordRands.length; i++) {
-        let idx_MGF1 = user.metadatas[index[i]].idx_MGF1;
-        idx_MGF1 = new BitSet(idx_MGF1);
+        console.log("i_xor_g", user.metadatas[index[i]].idx_MGF1);
+        let idx_MGF1 = new BitSet(user.metadatas[index[i]].idx_MGF1);
+
+        console.log("g_r", keywordRands[i], G(keywordRands[i]).toString(2));
+
         let idx = idx_MGF1.xor(G(keywordRands[i]));
+
+        console.log(idx.toString(2));
         idxs = idxs.xor(idx);
       }
       idxs = idxs.toString(2);
       let l = idxs.length;
       let enc_data = [];
+      console.log(idxs);
       for (let j = l - 1; j >= 0; j--) {
         if (idxs[j] === "1") {
-          enc_data.push(user.datas[l - j - 1].enc_content);
+          console.log(j, user.datas[j].enc_content);
+          enc_data.push(user.datas[j].enc_content);
         }
       }
       return enc_data;

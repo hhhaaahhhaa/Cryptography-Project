@@ -83,6 +83,11 @@ function SearchTab() {
       if (r) {
         // send r
         // fetch encrypted data
+        console.log({
+          keywordRands: r,
+          index: data1.search_s1.index,
+          uid: "0",
+        });
         await search_s2({
           variables: {
             keywordRands: r,

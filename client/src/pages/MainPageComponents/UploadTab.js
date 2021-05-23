@@ -89,6 +89,7 @@ function UploadTab() {
       let f_kf = f(k_f, element);
       let i = new BitSet(0);
       let r = getRandomInt(0xdeadbeef);
+      console.log(r);
       let idx_MGF1 = i.xor(G(r)).toString(2);
       let enc_r = AES_encrypt(r.toString(), k_eps);
 
@@ -154,7 +155,7 @@ function UploadTab() {
         });
 
         let update_bitsets = index_bitsets.map((the, i) => {
-          return the.set(file_index, 1).xor(G(g_r[i])).toString(2);
+          return the.xor(1 << file_index).xor(G(g_r[i])).toString(2);
         });
 
         console.log(g_r);

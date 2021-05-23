@@ -1,5 +1,5 @@
 const { f, rand } = require("../functions/F");
-const G = require("../functions/G");
+const { G } = require("../functions/G");
 const { k_f, k_M, k_eps } = require("../config");
 const { AES_encrypt } = require("../functions/aes");
 const { User } = require("../model/User");
@@ -26,6 +26,7 @@ const Mutation = {
         if (element.f_kf === f_kf) {
           element.idx_MGF1 = idx_MGF1;
           element.enc_r = enc_r;
+          console.log(element);
         }
       });
       await user.save();
