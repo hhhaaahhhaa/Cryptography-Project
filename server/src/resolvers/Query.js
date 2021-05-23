@@ -85,10 +85,10 @@ const Query = {
       let l = idxs.length;
       let enc_data = [];
       console.log(idxs);
-      for (let j = l - 1; j >= 0; j--) {
+      for (let j = 0; j < l; j++) {
         if (idxs[j] === "1") {
-          console.log(j, user.datas[j].enc_content);
-          enc_data.push(user.datas[j].enc_content);
+          console.log(j , l - j - 1, user.datas[l - j - 1].enc_content);
+          enc_data.push(user.datas[l - j - 1].enc_content);
         }
       }
       return enc_data;

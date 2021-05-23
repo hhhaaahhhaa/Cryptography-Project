@@ -1,3 +1,4 @@
+/* global BigInt */
 import React, { useContext, useEffect, useState } from "react";
 import BitSet from "bitset";
 import { makeStyles } from "@material-ui/core/styles";
@@ -140,7 +141,6 @@ function UploadTab() {
           }
         }
 
-        await upload(content);
 
         console.log(i_xor_g);
         console.log(e_g_r);
@@ -153,20 +153,23 @@ function UploadTab() {
           let i_xor_g_r = new BitSet(the);
           return i_xor_g_r.xor(G(g_r[i]));
         });
-
-        let update_bitsets = index_bitsets.map((the, i) => {
-          return the.xor(1 << file_index).xor(G(g_r[i])).toString(2);
-        });
-
-        console.log(g_r);
-        console.log(update_bitsets);
-        for (let i = 0; i < length; i++) {
-          console.log("update", chipData[i]);
-          await update({
-            f_kf: f(k_f, chipData[i]),
-            idx_MGF1: update_bitsets[i],
-            enc_r: AES_encrypt(g_r[i].toString(), k_eps),
+        await upload(content);
+        if(file_index){
+          console.log(file_index);
+          let update_bitsets = index_bitsets.map((the, i) => {
+            return the.set(file_index.createData, 1).xor(G(g_r[i])).toString(2);
           });
+
+          console.log(g_r);
+          console.log(update_bitsets);
+          for (let i = 0; i < length; i++) {
+            console.log("update", chipData[i]);
+            await update({
+              f_kf: f(k_f, chipData[i]),
+              idx_MGF1: update_bitsets[i],
+              enc_r: AES_encrypt(g_r[i].toString(), k_eps),
+            });
+          }
         }
       }
     } catch (err) {
