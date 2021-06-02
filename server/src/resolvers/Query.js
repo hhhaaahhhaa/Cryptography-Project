@@ -79,9 +79,10 @@ const Query = {
         let idx = idx_MGF1.xor(G(keywordRands[i]));
 
         console.log(idx.toString(2));
-        idxs = idxs.xor(idx);
+        idxs = idxs.or(idx);
       }
       idxs = idxs.toString(2);
+      idxs = idxs.slice(0, -1)
       let l = idxs.length;
       let enc_data = [];
       console.log(idxs);

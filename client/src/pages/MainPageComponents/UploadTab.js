@@ -39,6 +39,8 @@ function UploadTab() {
   const [chipData, setChipData] = useState([]);
   const [file, updFile] = useState();
   const [content, updContent] = useState();
+  const [g_r, setG_r] = useState()
+  const [index_bitsets, setIndex_bitsets] = useState()
   const [search_s1, { loading: load1, data: search_results }] =
     useLazyQuery(SEARCH_KEYWORD_QUERY);
   const [create_data, { loading: load2, data: file_index }] =
@@ -47,6 +49,14 @@ function UploadTab() {
     useMutation(CREATE_KEY_MUTATE);
   const [update_key, { loading: load4, data: update_sucess }] =
     useMutation(UPDATE_KEY_MUTATE);
+
+  useEffect(() => {
+      uploadContent()
+  }, [search_results])
+
+  useEffect(() => {
+      upd()
+  }, [file_index])
 
   const chooseFile = (file) => {
     updFile(file);
@@ -121,9 +131,9 @@ function UploadTab() {
 
   const uploadContent = async () => {
     try {
-      await search(chipData);
-
+    //   await search(chipData);
       if (search_results) {
+        console.log(search_results)
         let i_xor_g = [];
         let e_g_r = [];
 
@@ -140,7 +150,7 @@ function UploadTab() {
             e_g_r.push(search_results.search_keyword.e_g_r[i]);
           }
         }
-
+        
 
         console.log(i_xor_g);
         console.log(e_g_r);
@@ -153,13 +163,25 @@ function UploadTab() {
           let i_xor_g_r = new BitSet(the);
           return i_xor_g_r.xor(G(g_r[i]));
         });
+        setG_r(g_r)
+        setIndex_bitsets(index_bitsets)
+        
         await upload(content);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const upd = async () => {
+      try {
         if(file_index){
           console.log(file_index);
+          let length = g_r.length
           let update_bitsets = index_bitsets.map((the, i) => {
             return the.set(file_index.createData, 1).xor(G(g_r[i])).toString(2);
           });
-
+    
           console.log(g_r);
           console.log(update_bitsets);
           for (let i = 0; i < length; i++) {
@@ -171,11 +193,11 @@ function UploadTab() {
             });
           }
         }
+      } catch (err) {
+          console.log(err)
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    
+  }
 
   return (
     <div className={classes.root}>
@@ -215,7 +237,7 @@ function UploadTab() {
             color="primary"
             disableRipple={true}
             style={{ marginLeft: "8px" }}
-            onClick={() => uploadContent()}
+            onClick={() => search(chipData)}
           >
             GO!
           </Button>
